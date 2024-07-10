@@ -36,27 +36,7 @@ class RoverTest {
         assertThrows(Exception.class, () -> rover.takeCommands(new char[]{'k'}));
     }
 
-    @Test
-    void provideCommands_moveForward_success() {
-        Rover rover = new Rover(0,0,"N");
-
-        char[] chars = new char[]{'f'};
-        rover.takeCommands(chars);
-        assertEquals(0, rover.x());
-        assertEquals(1, rover.y());
-    }
-
-    @Test
-    void provideCommands_moveBackwards_success() {
-        Rover rover = new Rover(0,0,"N");
-
-        char[] chars = new char[]{'b'};
-        rover.takeCommands(chars);
-        assertEquals(0, rover.x());
-        assertEquals(-1, rover.y());
-    }
-
-    @ParameterizedTest
+    @ParameterizedTest(name = "[{index}] {0} {1} -> x: {2} y: {3}")
     @MethodSource
     void provideCommands_forwardBackwardDirection(String direction, char command, int x, int y) {
         Rover rover = new Rover(0,0,direction);
@@ -70,8 +50,14 @@ class RoverTest {
 
     public static Stream<Arguments> provideCommands_forwardBackwardDirection() {
         return Stream.of(
+                Arguments.of("N", 'f', 0, 1),
                 Arguments.of("N", 'b', 0, -1),
-                Arguments.of("N", 'f', 0, 1)
+                Arguments.of("S", 'f', 0, -1),
+                Arguments.of("S", 'b', 0, 1),
+                Arguments.of("E", 'f', 1, 0),
+                Arguments.of("E", 'b', -1, 0),
+                Arguments.of("W", 'f', -1, 0),
+                Arguments.of("W", 'b', 1, 0)
         );
     }
 
