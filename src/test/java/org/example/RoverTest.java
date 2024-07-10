@@ -24,14 +24,17 @@ class RoverTest {
     @Test
     void provideCommands_validInput_success() {
         Rover rover = new Rover(0,0,"N");
-        char[] emptyArray = new char[]{};
-        rover.takeCommands(emptyArray);
-
         char[] nonEmptyArray = new char[]{'f'};
         rover.takeCommands(nonEmptyArray);
     }
 
-    //Implement commands that move the rover forward/backward (f,b).
+    @Test
+    void provideCommands_invalidInput_success() {
+        Rover rover = new Rover(0,0,"N");
+
+        assertThrows(Exception.class, () -> rover.takeCommands(new char[]{}));
+        assertThrows(Exception.class, () -> rover.takeCommands(new char[]{'k'}));
+    }
 
     @Test
     void provideCommands_moveForward_success() {
@@ -39,8 +42,8 @@ class RoverTest {
 
         char[] chars = new char[]{'f'};
         rover.takeCommands(chars);
-        assertEquals(1, rover.x());
-        assertEquals(0, rover.y());
+        assertEquals(0, rover.x());
+        assertEquals(1, rover.y());
     }
 
     @Test
@@ -49,8 +52,8 @@ class RoverTest {
 
         char[] chars = new char[]{'b'};
         rover.takeCommands(chars);
-        assertEquals(-1, rover.x());
-        assertEquals(0, rover.y());
+        assertEquals(0, rover.x());
+        assertEquals(-1, rover.y());
     }
 
     @ParameterizedTest
@@ -67,8 +70,8 @@ class RoverTest {
 
     public static Stream<Arguments> provideCommands_forwardBackwardDirection() {
         return Stream.of(
-                Arguments.of("N", 'b', -1, 0),
-                Arguments.of("N", 'f', 1, 0)
+                Arguments.of("N", 'b', 0, -1),
+                Arguments.of("N", 'f', 0, 1)
         );
     }
 
