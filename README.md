@@ -15,7 +15,7 @@ This is an incremental kata to simulate a real business situation: work your way
    10. the only obstacle mentioned would be other rovers or the edges of the plateau
 
 thoughts on how to implement obstacle detection
-- the current structure of the code means the rover handles it's own moves and the plateau validates it's current location.
+- the current structure of the code means the rover handles its own moves and the plateau validates its current location.
 - one solution is to have the plateau call each rover for each command, validate and roll back on obstacle.
   - this would require keeping the previous state of the rover and reverting on invalid coordinate, OR creating the new coordinates without updating the rovers coords, validating and then either aborting the move or updating thr rover.
 - another solution would be to allow the rovers to access plateau data about the bounds of the plateau and the coords of the other rovers
@@ -24,3 +24,7 @@ thoughts on how to implement obstacle detection
   - makes more sense to have rover validation on the rover
   - wouldn't have to store state and revert, just don't do invalid moves in the first place
   - might be able to refactor this into a nicer solution
+
+further work:
+- command line app with a fun ascii representation of the moving rovers
+- some more refactoring of the core logic as it's pretty verbose 

@@ -1,76 +1,21 @@
 package org.example;
 
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
 import java.util.List;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class PlateauTest {
 
     @Test
-    void validRover_invalidMoveOffPlateau_endCoordFinalValidCoordOfPath() {
-        char[] nonEmptyArray = new char[]{'f', 'f'};
-        Rover rover = new Rover(10,9,"N", nonEmptyArray);
-
-        Plateau plateau = new Plateau(10, 10, List.of(rover));
-
-        plateau.moveRovers();
-
-        assertEquals(10, rover.y());
-        assertEquals(10, rover.x());
-        assertDoesNotThrow(plateau::validateRovers);
-    }
-
-    @Test
-    void validRover_invalidMoveOffPlateau_endCoordFinalValidCoordOfPathnegative() {
-        char[] nonEmptyArray = new char[]{'b'};
-        Rover rover = new Rover(0,0,"N", nonEmptyArray);
-
-        Plateau plateau = new Plateau(10, 10, List.of(rover));
-
-        plateau.moveRovers();
-
-        assertEquals(0, rover.y());
-        assertEquals(0, rover.x());
-        assertDoesNotThrow(plateau::validateRovers);
-    }
-
-    @Test
-    void validRover_invalidMoveCollision_endCoordFinalValidCoordOfPath() {
-        Rover rover1 = new Rover(0,0,"N", new char[]{'f'});
-        Rover rover2 = new Rover(0,1,"N", new char[]{'f','b'});
-
-        Plateau plateau = new Plateau(10, 10, List.of(rover1, rover2));
-
-        plateau.moveRovers();
-
-        assertEquals(0, rover1.y());
-        assertEquals(0, rover1.x());
-
-        assertEquals(1, rover2.y());
-        assertEquals(0, rover2.x());
-
-        assertDoesNotThrow(plateau::validateRovers);
-    }
-
-    @Test
-    void invalidRover_initPlateau_exception() {
-        Rover rover = new Rover(11,11,"N", new char[]{'f'});
-        assertThrows(Exception.class, () -> new Plateau(10, 10, List.of(rover)));
-
-        Rover rover2 = new Rover(0,0,"N", new char[]{'f'});
-        Rover rover3 = new Rover(0,0,"N", new char[]{'f'});
-        assertThrows(Exception.class, () -> new Plateau(10, 10, List.of(rover2, rover3)));
-
-        Rover rover4 = new Rover(-1,-1,"N", new char[]{'f'});
-        assertThrows(Exception.class, () -> new Plateau(10, 10, List.of(rover4)));
-    }
-
-    @Test
     void validRover_validMove_success() {
         char[] nonEmptyArray = new char[]{'f'};
-        Rover rover = new Rover(0,0,"N", nonEmptyArray);
+        Rover rover = new Rover(0, 0, Direction.N, nonEmptyArray);
 
         Plateau plateau = new Plateau(10, 10, List.of(rover));
 
@@ -78,7 +23,57 @@ class PlateauTest {
 
         assertEquals(1, rover.y());
         assertEquals(0, rover.x());
-        assertEquals("N", rover.direction());
+        assertEquals(Direction.N, rover.direction());
         assertDoesNotThrow(plateau::validateRovers);
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void invalidMoveReverted(List<Rover> startState, List<Rover> endState) {
+
+        Plateau plateau = new Plateau(10, 10, startState);
+
+        plateau.moveRovers();
+
+        assertEquals(plateau.getRovers().size(), endState.size());
+        assertEquals(plateau.getRovers().getFirst(), endState.getFirst());
+        assertEquals(plateau.getRovers().getLast(), endState.getLast());
+
+        assertDoesNotThrow(plateau::validateRovers);
+    }
+
+
+    public static Stream<Arguments> invalidMoveReverted() {
+        return Stream.of(
+                Arguments.of(
+                        List.of(new Rover(10, 9, Direction.N, new char[]{'f', 'f'})),
+                        List.of(new Rover(10, 10, Direction.N, new char[]{'f', 'f'}))),
+                Arguments.of(
+                        List.of(new Rover(0, 0, Direction.N, new char[]{'b'})),
+                        List.of(new Rover(0, 0, Direction.N, new char[]{'b'}))),
+                Arguments.of(
+                        List.of(new Rover(0, 0, Direction.N, new char[]{'f'}), new Rover(0, 1, Direction.N, new char[]{'f', 'b'})),
+                        List.of(new Rover(0, 0, Direction.N, new char[]{'f'}), new Rover(0, 1, Direction.N, new char[]{'f', 'b'})))
+        );
+    }
+
+
+    @ParameterizedTest
+    @MethodSource
+    void init_throws(List<Rover> rovers) {
+        assertThrows(Exception.class, () -> new Plateau(10, 10, rovers));
+    }
+
+
+    public static Stream<Arguments> init_throws() {
+        return Stream.of(
+                Arguments.of(List.of(new Rover(11, 11, Direction.N, new char[]{'f'}))),
+                Arguments.of(List.of(new Rover(-1, -1, Direction.N, new char[]{'f'}))),
+                Arguments.of(List.of(
+                        new Rover(0, 0, Direction.N, new char[]{'f'}),
+                        new Rover(0, 0, Direction.N, new char[]{'f'})
+                ))
+
+        );
     }
 }

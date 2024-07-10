@@ -2,22 +2,24 @@ package org.example;
 
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
+
+import static org.example.Command.*;
+import static org.example.Direction.*;
 
 public final class Rover {
     private int x;
     private int y;
-    private String direction;
-    char[] commands;
-    public List<State> history = new ArrayList<>();
+    private Direction direction;
+    final List<Command> commands;
+    public final List<State> history = new ArrayList<>();
 
-    public Rover(int x, int y, String direction, char[] commands) {
+    public Rover(int x, int y, Direction direction, char[] commands) {
         this.x = x;
         this.y = y;
         this.direction = direction;
-        this.commands = commands;
+        this.commands = getCommands(commands);
         if (commands.length == 0) {
             throw new IllegalStateException("Unexpected value: commands empty");
         }
@@ -34,69 +36,67 @@ public final class Rover {
     }
 
     public void takeCommands() {
-        for (char command : commands) {
+        for (Command command : commands) {
             switch (command) {
-                case 'f', 'b':
+                case f, b -> {
                     move(command);
                     history.add(new State(x, y, direction));
-                    break;
-                case 'r', 'l':
+                }
+                case r, l -> {
                     turn(command);
                     history.add(new State(x, y, direction));
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + command);
+                }
+                default -> throw new IllegalStateException("Unexpected value: " + command);
             }
         }
 
 
     }
 
-    //todo make some enums
-    private void turn(char command) {
-        if (command == 'r') {
+    private void turn(Command command) {
+        if (command == r) {
             switch (direction) {
-                case "N":
-                    direction = "E";
-                    break;
-                case "E":
-                    direction = "S";
-                    break;
-                case "S":
-                    direction = "W";
-                    break;
-                case "W":
-                    direction = "N";
-                    break;
+                case N -> direction = E;
+                case E -> direction = S;
+                case S -> direction = W;
+                case W -> direction = N;
             }
         } else {
             switch (direction) {
-                case "N":
-                    direction = "W";
-                    break;
-                case "W":
-                    direction = "S";
-                    break;
-                case "S":
-                    direction = "E";
-                    break;
-                case "E":
-                    direction = "N";
-                    break;
+                case N -> direction = W;
+                case W -> direction = S;
+                case S -> direction = E;
+                case E -> direction = N;
             }
         }
     }
 
-    private void move(char firstChar) {
-        if (firstChar == 'f' && direction.equals("N") || firstChar == 'b' && direction.equals("S")) {
+    private void move(Command firstChar) {
+        if (moveNorth(firstChar)) {
             y++;
-        } else if (firstChar == 'b' && direction.equals("N") || firstChar == 'f' && direction.equals("S")) {
+        } else if (moveSouth(firstChar)) {
             y--;
-        } else if (firstChar == 'f' && direction.equals("E") || firstChar == 'b' && direction.equals("W")) {
+        } else if (moveEast(firstChar)) {
             x++;
-        } else if (firstChar == 'b' && direction.equals("E") || firstChar == 'f' && direction.equals("W")) {
+        } else if (moveWest(firstChar)) {
             x--;
         }
+    }
+
+    private boolean moveWest(Command firstChar) {
+        return firstChar == b && direction.equals(E) || firstChar == f && direction.equals(W);
+    }
+
+    private boolean moveEast(Command firstChar) {
+        return firstChar == f && direction.equals(E) || firstChar == b && direction.equals(W);
+    }
+
+    private boolean moveSouth(Command firstChar) {
+        return firstChar == b && direction.equals(N) || firstChar == f && direction.equals(S);
+    }
+
+    private boolean moveNorth(Command firstChar) {
+        return firstChar == f && direction.equals(N) || firstChar == b && direction.equals(S);
     }
 
     public int x() {
@@ -107,24 +107,21 @@ public final class Rover {
         return y;
     }
 
-    public String direction() {
+    public Direction direction() {
         return direction;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj == this) return true;
-        if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (Rover) obj;
-        return this.x == that.x &&
-                this.y == that.y &&
-                this.commands == that.commands &&
-                Objects.equals(this.direction, that.direction);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Rover rover = (Rover) o;
+        return x == rover.x && y == rover.y && direction == rover.direction && Objects.equals(commands, rover.commands);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, Arrays.hashCode(commands), direction);
+        return Objects.hash(x, y, commands, direction);
     }
 
     @Override
@@ -132,7 +129,7 @@ public final class Rover {
         return "Rover[" +
                 "x=" + x + ", " +
                 "y=" + y + ", " +
-                "commands=" + Arrays.toString(commands) + ", " +
+                "commands=" + commands + ", " +
                 "direction=" + direction + ']';
     }
 
