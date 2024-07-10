@@ -24,7 +24,7 @@ class RoverTest {
     @Test
     void provideCommands_validInput_success() {
         Rover rover = new Rover(0,0,"N");
-        char[] nonEmptyArray = new char[]{'f'};
+        char[] nonEmptyArray = new char[]{'f', 'b', 'l', 'r'};
         rover.takeCommands(nonEmptyArray);
     }
 
@@ -48,8 +48,8 @@ class RoverTest {
 
 
     public static Stream<Arguments> provideCommands_forwardBackwardDirection() {
-        char[] f = new char[]{'f'};
-        char[] b = new char[]{'b'};
+        char[] f = {'f'};
+        char[] b = {'b'};
         char[] cancelOut = {'b', 'f'};
         char[] ff = {'f', 'f'};
         char[] bb = {'b', 'b'};
@@ -76,9 +76,38 @@ class RoverTest {
                 Arguments.of("N", bb, 0, -2),
                 Arguments.of("S", bb, 0, 2),
                 Arguments.of("E", bb, -2, 0),
-                Arguments.of("W", bb, 2, 0)
+                Arguments.of("W", bb, 2, 0),
+
+                Arguments.of("N", new char[]{'f', 'r', 'f'}, 1, 1)
         );
     }
 
+    @Test
+    void provideCommands_turnLeft_success() {
+        Rover rover = new Rover(0,0,"N");
+        char[] nonEmptyArray = new char[]{'l'};
+        rover.takeCommands(nonEmptyArray);
+        assertEquals("W", rover.direction());
+        rover.takeCommands(nonEmptyArray);
+        assertEquals("S", rover.direction());
+        rover.takeCommands(nonEmptyArray);
+        assertEquals("E", rover.direction());
+        rover.takeCommands(nonEmptyArray);
+        assertEquals("N", rover.direction());
+    }
+
+    @Test
+    void provideCommands_turnRight_success() {
+        Rover rover = new Rover(0,0,"N");
+        char[] nonEmptyArray = new char[]{'r'};
+        rover.takeCommands(nonEmptyArray);
+        assertEquals("E", rover.direction());
+        rover.takeCommands(nonEmptyArray);
+        assertEquals("S", rover.direction());
+        rover.takeCommands(nonEmptyArray);
+        assertEquals("W", rover.direction());
+        rover.takeCommands(nonEmptyArray);
+        assertEquals("N", rover.direction());
+    }
 
 }
