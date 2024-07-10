@@ -38,26 +38,45 @@ class RoverTest {
 
     @ParameterizedTest(name = "[{index}] {0} {1} -> x: {2} y: {3}")
     @MethodSource
-    void provideCommands_forwardBackwardDirection(String direction, char command, int x, int y) {
+    void provideCommands_forwardBackwardDirection(String direction, char[] chars, int x, int y) {
         Rover rover = new Rover(0,0,direction);
 
-        char[] chars = new char[]{command};
         rover.takeCommands(chars);
-        assertEquals(x, rover.x());
-        assertEquals(y, rover.y());
+
+        assertAll(() -> assertEquals(x, rover.x()), () -> assertEquals(y, rover.y()));
     }
 
 
     public static Stream<Arguments> provideCommands_forwardBackwardDirection() {
+        char[] f = new char[]{'f'};
+        char[] b = new char[]{'b'};
+        char[] cancelOut = {'b', 'f'};
+        char[] ff = {'f', 'f'};
+        char[] bb = {'b', 'b'};
         return Stream.of(
-                Arguments.of("N", 'f', 0, 1),
-                Arguments.of("N", 'b', 0, -1),
-                Arguments.of("S", 'f', 0, -1),
-                Arguments.of("S", 'b', 0, 1),
-                Arguments.of("E", 'f', 1, 0),
-                Arguments.of("E", 'b', -1, 0),
-                Arguments.of("W", 'f', -1, 0),
-                Arguments.of("W", 'b', 1, 0)
+                Arguments.of("N", f, 0, 1),
+                Arguments.of("N", b, 0, -1),
+                Arguments.of("S", f, 0, -1),
+                Arguments.of("S", b, 0, 1),
+                Arguments.of("E", f, 1, 0),
+                Arguments.of("E", b, -1, 0),
+                Arguments.of("W", f, -1, 0),
+                Arguments.of("W", b, 1, 0),
+
+                Arguments.of("N", cancelOut, 0, 0),
+                Arguments.of("S", cancelOut, 0, 0),
+                Arguments.of("E", cancelOut, 0, 0),
+                Arguments.of("W", cancelOut, 0, 0),
+
+                Arguments.of("N", ff, 0, 2),
+                Arguments.of("S", ff, 0, -2),
+                Arguments.of("E", ff, 2, 0),
+                Arguments.of("W", ff, -2, 0),
+
+                Arguments.of("N", bb, 0, -2),
+                Arguments.of("S", bb, 0, 2),
+                Arguments.of("E", bb, -2, 0),
+                Arguments.of("W", bb, 2, 0)
         );
     }
 

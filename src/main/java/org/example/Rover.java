@@ -17,8 +17,12 @@ public final class Rover {
 
         validate(commands);
 
-        char firstChar = commands[0];
+        for (char command : commands) {
+            move(command);
+        }
+    }
 
+    private void move(char firstChar) {
         if (firstChar == 'f' && direction.equals("N") || firstChar == 'b' && direction.equals("S")) {
             y++;
         }
@@ -34,31 +38,19 @@ public final class Rover {
         if (firstChar == 'b' && direction.equals("E") || firstChar == 'f' && direction.equals("W")) {
             x--;
         }
-
-
     }
 
-    /*
-        f north = increase y
-        b north = decrease y
-
-        south = opposite of north (f decrease y, b increase y)
-
-        f east = increase x
-        b east = decrease x
-
-         */
     private static void validate(char[] commands) {
         if (commands.length == 0) {
             throw new IllegalStateException("Unexpected value: commands empty");
         }
 
-        for (int i = 0; i < commands.length; i++) {
-            switch (commands[i]) {
+        for (char command : commands) {
+            switch (command) {
                 case 'f', 'b':
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected value: " + commands[i]);
+                    throw new IllegalStateException("Unexpected value: " + command);
             }
         }
     }
