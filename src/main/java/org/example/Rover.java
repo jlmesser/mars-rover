@@ -15,10 +15,57 @@ public final class Rover {
 
     public void takeCommands(char[] commands) {
 
-        validate(commands);
+        if (commands.length == 0) {
+            throw new IllegalStateException("Unexpected value: commands empty");
+        }
 
         for (char command : commands) {
-            move(command);
+            switch (command) {
+                case 'f', 'b':
+                    move(command);
+                    break;
+                case 'r', 'l':
+                    turn(command);
+                    break;
+                default:
+                    throw new IllegalStateException("Unexpected value: " + command);
+            }
+        }
+
+
+    }
+
+    private void turn(char command) {
+        if (command == 'r') {
+            switch (direction) {
+                case "N":
+                    direction = "E";
+                    break;
+                case "E":
+                    direction = "S";
+                    break;
+                case "S":
+                    direction = "W";
+                    break;
+                case "W":
+                    direction = "N";
+                    break;
+            }
+        } else {
+            switch (direction) {
+                case "N":
+                    direction = "W";
+                    break;
+                case "W":
+                    direction = "S";
+                    break;
+                case "S":
+                    direction = "E";
+                    break;
+                case "E":
+                    direction = "N";
+                    break;
+            }
         }
     }
 
@@ -37,21 +84,6 @@ public final class Rover {
 
         if (firstChar == 'b' && direction.equals("E") || firstChar == 'f' && direction.equals("W")) {
             x--;
-        }
-    }
-
-    private static void validate(char[] commands) {
-        if (commands.length == 0) {
-            throw new IllegalStateException("Unexpected value: commands empty");
-        }
-
-        for (char command : commands) {
-            switch (command) {
-                case 'f', 'b':
-                    break;
-                default:
-                    throw new IllegalStateException("Unexpected value: " + command);
-            }
         }
     }
 
