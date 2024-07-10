@@ -13,10 +13,10 @@ class RoverTest {
 
     @Test
     void createRover_validInput_success() {
-        Rover roverN = new Rover(0,0,"N", new char[]{});
-        Rover roverS = new Rover(0,0,"S", new char[]{});
-        Rover roverE = new Rover(0,0,"E", new char[]{});
-        Rover roverW = new Rover(0,0,"W", new char[]{});
+        Rover roverN = new Rover(0,0,"N", new char[]{'f'});
+        Rover roverS = new Rover(0,0,"S", new char[]{'f'});
+        Rover roverE = new Rover(0,0,"E", new char[]{'f'});
+        Rover roverW = new Rover(0,0,"W", new char[]{'f'});
     }
 
     @Test
@@ -28,7 +28,7 @@ class RoverTest {
 
     @Test
     void provideCommands_invalidInput_success() {
-        assertThrows(Exception.class, new Rover(0,0,"N", new char[]{})::takeCommands);
+        assertThrows(Exception.class, () -> new Rover(0,0,"N", new char[]{}));
         assertThrows(Exception.class, () -> new Rover(0,0,"N", new char[]{'k'}).takeCommands());
     }
 
@@ -43,6 +43,7 @@ class RoverTest {
     }
 
 
+    //todo add checks for final heading (e.g. started north, ended up west etc?)
     public static Stream<Arguments> provideCommands_forwardBackwardDirection() {
         char[] f = {'f'};
         char[] b = {'b'};
@@ -85,8 +86,6 @@ class RoverTest {
 
                 Arguments.of("W", new char[]{'b', 'r', 'b'}, 1, -1),
                 Arguments.of("W", new char[]{'b', 'l', 'b'}, 1, 1),
-
-                //
 
                 Arguments.of("N", new char[]{'b', 'r', 'b'}, -1, -1),
                 Arguments.of("N", new char[]{'b', 'l', 'b'}, 1, -1),

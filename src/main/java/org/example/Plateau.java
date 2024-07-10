@@ -2,6 +2,7 @@ package org.example;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class Plateau {
     int x;
@@ -24,6 +25,11 @@ public class Plateau {
             if (rover.x() < 0 || rover.x() > x || rover.y() < 0 || rover.y() > y) {
                 throw new IllegalStateException("Invalid rover location, outside plateau");
             }
+        }
+
+        long uniqueCoords = rovers.stream().map(rv -> Map.entry(rv.x(), rv.y())).distinct().count();
+        if (uniqueCoords != rovers.size()) {
+            throw new IllegalStateException("Invalid rover location, at least 2 rovers share one location");
         }
     }
 

@@ -13,14 +13,12 @@ public final class Rover {
         this.y = y;
         this.direction = direction;
         this.commands = commands;
-    }
-
-    public void takeCommands() {
-
         if (commands.length == 0) {
             throw new IllegalStateException("Unexpected value: commands empty");
         }
+    }
 
+    public void takeCommands() {
         for (char command : commands) {
             switch (command) {
                 case 'f', 'b':
@@ -74,17 +72,11 @@ public final class Rover {
     private void move(char firstChar) {
         if (firstChar == 'f' && direction.equals("N") || firstChar == 'b' && direction.equals("S")) {
             y++;
-        }
-
-        if (firstChar == 'b' && direction.equals("N") || firstChar == 'f' && direction.equals("S")) {
+        } else if (firstChar == 'b' && direction.equals("N") || firstChar == 'f' && direction.equals("S")) {
             y--;
-        }
-
-        if (firstChar == 'f' && direction.equals("E") || firstChar == 'b' && direction.equals("W")) {
+        } else if (firstChar == 'f' && direction.equals("E") || firstChar == 'b' && direction.equals("W")) {
             x++;
-        }
-
-        if (firstChar == 'b' && direction.equals("E") || firstChar == 'f' && direction.equals("W")) {
+        } else if (firstChar == 'b' && direction.equals("E") || firstChar == 'f' && direction.equals("W")) {
             x--;
         }
     }
