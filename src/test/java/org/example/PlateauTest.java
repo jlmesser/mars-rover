@@ -8,6 +8,8 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlateauTest {
 
+    //todo test -0 coords
+
     @Test
     void validRover_invalidMoveOffPlateau_endCoordFinalValidCoordOfPath() {
         char[] nonEmptyArray = new char[]{'f', 'f'};
