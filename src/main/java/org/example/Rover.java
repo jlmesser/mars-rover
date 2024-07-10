@@ -1,5 +1,9 @@
 package org.example;
 
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 
 public final class Rover {
@@ -7,6 +11,7 @@ public final class Rover {
     private int y;
     private String direction;
     char[] commands;
+    public List<State> history = new ArrayList<>();
 
     public Rover(int x, int y, String direction, char[] commands) {
         this.x = x;
@@ -16,6 +21,16 @@ public final class Rover {
         if (commands.length == 0) {
             throw new IllegalStateException("Unexpected value: commands empty");
         }
+        State initialState = new State(x, y, direction);
+        history.add(initialState);
+    }
+
+    public void revertOne() {
+        history.removeLast();
+        State prevState = history.getLast();
+        x = prevState.x();
+        y = prevState.y();
+        direction = prevState.direction();
     }
 
     public void takeCommands() {
@@ -23,9 +38,11 @@ public final class Rover {
             switch (command) {
                 case 'f', 'b':
                     move(command);
+                    history.add(new State(x, y, direction));
                     break;
                 case 'r', 'l':
                     turn(command);
+                    history.add(new State(x, y, direction));
                     break;
                 default:
                     throw new IllegalStateException("Unexpected value: " + command);
@@ -35,6 +52,7 @@ public final class Rover {
 
     }
 
+    //todo make some enums
     private void turn(char command) {
         if (command == 'r') {
             switch (direction) {
@@ -100,12 +118,13 @@ public final class Rover {
         var that = (Rover) obj;
         return this.x == that.x &&
                 this.y == that.y &&
+                this.commands == that.commands &&
                 Objects.equals(this.direction, that.direction);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(x, y, direction);
+        return Objects.hash(x, y, Arrays.hashCode(commands), direction);
     }
 
     @Override
@@ -113,6 +132,7 @@ public final class Rover {
         return "Rover[" +
                 "x=" + x + ", " +
                 "y=" + y + ", " +
+                "commands=" + Arrays.toString(commands) + ", " +
                 "direction=" + direction + ']';
     }
 

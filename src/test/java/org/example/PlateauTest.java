@@ -8,8 +8,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class PlateauTest {
 
-    //todo test -0 coords
-
     @Test
     void validRover_invalidMoveOffPlateau_endCoordFinalValidCoordOfPath() {
         char[] nonEmptyArray = new char[]{'f', 'f'};
@@ -19,9 +17,23 @@ class PlateauTest {
 
         plateau.moveRovers();
 
-        assertEquals(11, rover.y()); //todo implement stopping path at valid coord
+        assertEquals(10, rover.y());
         assertEquals(10, rover.x());
-        assertThrows(Exception.class, plateau::validateRovers);
+        assertDoesNotThrow(plateau::validateRovers);
+    }
+
+    @Test
+    void validRover_invalidMoveOffPlateau_endCoordFinalValidCoordOfPathnegative() {
+        char[] nonEmptyArray = new char[]{'b'};
+        Rover rover = new Rover(0,0,"N", nonEmptyArray);
+
+        Plateau plateau = new Plateau(10, 10, List.of(rover));
+
+        plateau.moveRovers();
+
+        assertEquals(0, rover.y());
+        assertEquals(0, rover.x());
+        assertDoesNotThrow(plateau::validateRovers);
     }
 
     @Test
@@ -29,21 +41,30 @@ class PlateauTest {
         Rover rover1 = new Rover(0,0,"N", new char[]{'f'});
         Rover rover2 = new Rover(0,1,"N", new char[]{'f','b'});
 
-        Plateau plateau = new Plateau(10, 10, List.of(rover1, rover2)); //todo validate start rovers not on top of each other
+        Plateau plateau = new Plateau(10, 10, List.of(rover1, rover2));
 
         plateau.moveRovers();
 
-        assertThrows(Exception.class, plateau::validateRovers);
+        assertEquals(0, rover1.y());
+        assertEquals(0, rover1.x());
+
+        assertEquals(1, rover2.y());
+        assertEquals(0, rover2.x());
+
+        assertDoesNotThrow(plateau::validateRovers);
     }
 
     @Test
     void invalidRover_initPlateau_exception() {
-        Rover rover = new Rover(10,11,"N", new char[]{'f'});
+        Rover rover = new Rover(11,11,"N", new char[]{'f'});
         assertThrows(Exception.class, () -> new Plateau(10, 10, List.of(rover)));
 
         Rover rover2 = new Rover(0,0,"N", new char[]{'f'});
         Rover rover3 = new Rover(0,0,"N", new char[]{'f'});
         assertThrows(Exception.class, () -> new Plateau(10, 10, List.of(rover2, rover3)));
+
+        Rover rover4 = new Rover(-1,-1,"N", new char[]{'f'});
+        assertThrows(Exception.class, () -> new Plateau(10, 10, List.of(rover4)));
     }
 
     @Test
