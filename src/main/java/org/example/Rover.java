@@ -15,6 +15,40 @@ public final class Rover {
 
     public void takeCommands(char[] commands) {
 
+        validate(commands);
+
+        char firstChar = commands[0];
+
+        if (firstChar == 'f' && direction.equals("N") || firstChar == 'b' && direction.equals("S")) {
+            y++;
+        }
+
+        if (firstChar == 'b' && direction.equals("N") || firstChar == 'f' && direction.equals("S")) {
+            y--;
+        }
+
+        if (firstChar == 'f' && direction.equals("E") || firstChar == 'b' && direction.equals("W")) {
+            x++;
+        }
+
+        if (firstChar == 'b' && direction.equals("E") || firstChar == 'f' && direction.equals("W")) {
+            x--;
+        }
+
+
+    }
+
+    /*
+        f north = increase y
+        b north = decrease y
+
+        south = opposite of north (f decrease y, b increase y)
+
+        f east = increase x
+        b east = decrease x
+
+         */
+    private static void validate(char[] commands) {
         if (commands.length == 0) {
             throw new IllegalStateException("Unexpected value: commands empty");
         }
@@ -27,18 +61,6 @@ public final class Rover {
                     throw new IllegalStateException("Unexpected value: " + commands[i]);
             }
         }
-
-        char firstChar = commands[0];
-
-        if (firstChar == 'f' && direction.equals("N")) {
-            y ++;
-        }
-
-        if (firstChar == 'b' && direction.equals("N")) {
-            y --;
-        }
-
-
     }
 
     public int x() {
