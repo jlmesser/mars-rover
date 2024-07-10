@@ -11,8 +11,6 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class RoverTest {
 
-
-
     @Test
     void createRover_validInput_success() {
         Rover roverN = new Rover(0,0,"N");
@@ -78,7 +76,31 @@ class RoverTest {
                 Arguments.of("E", bb, -2, 0),
                 Arguments.of("W", bb, 2, 0),
 
-                Arguments.of("N", new char[]{'f', 'r', 'f'}, 1, 1)
+                Arguments.of("N", new char[]{'f', 'r', 'f'}, 1, 1),
+                Arguments.of("N", new char[]{'f', 'l', 'f'}, -1, 1),
+
+                Arguments.of("E", new char[]{'f', 'r', 'f'}, 1, -1),
+                Arguments.of("E", new char[]{'f', 'l', 'f'}, 1, 1),
+
+                Arguments.of("S", new char[]{'b', 'r', 'b'}, 1, 1),
+                Arguments.of("S", new char[]{'b', 'l', 'b'}, -1, 1),
+
+                Arguments.of("W", new char[]{'b', 'r', 'b'}, 1, -1),
+                Arguments.of("W", new char[]{'b', 'l', 'b'}, 1, 1),
+
+                //
+
+                Arguments.of("N", new char[]{'b', 'r', 'b'}, -1, -1),
+                Arguments.of("N", new char[]{'b', 'l', 'b'}, 1, -1),
+
+                Arguments.of("E", new char[]{'b', 'r', 'b'}, -1, 1),
+                Arguments.of("E", new char[]{'b', 'l', 'b'}, -1, -1),
+
+                Arguments.of("S", new char[]{'f', 'r', 'f'}, -1, -1),
+                Arguments.of("S", new char[]{'f', 'l', 'f'}, 1, -1),
+
+                Arguments.of("W", new char[]{'f', 'r', 'f'}, -1, 1),
+                Arguments.of("W", new char[]{'f', 'l', 'f'}, -1, -1)
         );
     }
 
