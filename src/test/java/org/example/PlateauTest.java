@@ -9,32 +9,36 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlateauTest {
 
     @Test
-    void invalidRoverCoords() {
-        Rover rover = new Rover(10,10,"N");
+    void validRover_invalidMove_exception() {
         char[] nonEmptyArray = new char[]{'f'};
+        Rover rover = new Rover(10,10,"N", nonEmptyArray);
 
         Plateau plateau = new Plateau(10, 10, List.of(rover));
 
-        rover.takeCommands(nonEmptyArray);
+        plateau.moveRovers();
 
+        assertEquals(11, rover.y());
+        assertEquals(10, rover.x());
         assertThrows(Exception.class, plateau::validateRovers);
     }
 
     @Test
-    void invalidRoverCoordsStart() {
-        Rover rover = new Rover(10,11,"N");
+    void invalidRover_initPlateau_exception() {
+        Rover rover = new Rover(10,11,"N", new char[]{});
         assertThrows(Exception.class, () -> new Plateau(10, 10, List.of(rover)));
     }
 
     @Test
-    void validRoverCoords() {
-        Rover rover = new Rover(0,0,"N");
+    void validRover_validMove_success() {
         char[] nonEmptyArray = new char[]{'f'};
+        Rover rover = new Rover(0,0,"N", nonEmptyArray);
 
         Plateau plateau = new Plateau(10, 10, List.of(rover));
 
-        rover.takeCommands(nonEmptyArray);
+        plateau.moveRovers();
 
+        assertEquals(1, rover.y());
+        assertEquals(0, rover.x());
         assertDoesNotThrow(plateau::validateRovers);
     }
 }

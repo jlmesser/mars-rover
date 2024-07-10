@@ -13,33 +13,31 @@ class RoverTest {
 
     @Test
     void createRover_validInput_success() {
-        Rover roverN = new Rover(0,0,"N");
-        Rover roverS = new Rover(0,0,"S");
-        Rover roverE = new Rover(0,0,"E");
-        Rover roverW = new Rover(0,0,"W");
+        Rover roverN = new Rover(0,0,"N", new char[]{});
+        Rover roverS = new Rover(0,0,"S", new char[]{});
+        Rover roverE = new Rover(0,0,"E", new char[]{});
+        Rover roverW = new Rover(0,0,"W", new char[]{});
     }
 
     @Test
     void provideCommands_validInput_success() {
-        Rover rover = new Rover(0,0,"N");
         char[] nonEmptyArray = new char[]{'f', 'b', 'l', 'r'};
-        rover.takeCommands(nonEmptyArray);
+        Rover rover = new Rover(0,0,"N", nonEmptyArray);
+        rover.takeCommands();
     }
 
     @Test
     void provideCommands_invalidInput_success() {
-        Rover rover = new Rover(0,0,"N");
-
-        assertThrows(Exception.class, () -> rover.takeCommands(new char[]{}));
-        assertThrows(Exception.class, () -> rover.takeCommands(new char[]{'k'}));
+        assertThrows(Exception.class, new Rover(0,0,"N", new char[]{})::takeCommands);
+        assertThrows(Exception.class, () -> new Rover(0,0,"N", new char[]{'k'}).takeCommands());
     }
 
     @ParameterizedTest(name = "[{index}] {0} {1} -> x: {2} y: {3}")
     @MethodSource
     void provideCommands_forwardBackwardDirection(String direction, char[] chars, int x, int y) {
-        Rover rover = new Rover(0,0,direction);
+        Rover rover = new Rover(0,0,direction, chars);
 
-        rover.takeCommands(chars);
+        rover.takeCommands();
 
         assertAll(() -> assertEquals(x, rover.x()), () -> assertEquals(y, rover.y()));
     }
@@ -106,29 +104,29 @@ class RoverTest {
 
     @Test
     void provideCommands_turnLeft_success() {
-        Rover rover = new Rover(0,0,"N");
         char[] nonEmptyArray = new char[]{'l'};
-        rover.takeCommands(nonEmptyArray);
+        Rover rover = new Rover(0,0,"N", nonEmptyArray);
+        rover.takeCommands();
         assertEquals("W", rover.direction());
-        rover.takeCommands(nonEmptyArray);
+        rover.takeCommands();
         assertEquals("S", rover.direction());
-        rover.takeCommands(nonEmptyArray);
+        rover.takeCommands();
         assertEquals("E", rover.direction());
-        rover.takeCommands(nonEmptyArray);
+        rover.takeCommands();
         assertEquals("N", rover.direction());
     }
 
     @Test
     void provideCommands_turnRight_success() {
-        Rover rover = new Rover(0,0,"N");
         char[] nonEmptyArray = new char[]{'r'};
-        rover.takeCommands(nonEmptyArray);
+        Rover rover = new Rover(0,0,"N", nonEmptyArray);
+        rover.takeCommands();
         assertEquals("E", rover.direction());
-        rover.takeCommands(nonEmptyArray);
+        rover.takeCommands();
         assertEquals("S", rover.direction());
-        rover.takeCommands(nonEmptyArray);
+        rover.takeCommands();
         assertEquals("W", rover.direction());
-        rover.takeCommands(nonEmptyArray);
+        rover.takeCommands();
         assertEquals("N", rover.direction());
     }
 

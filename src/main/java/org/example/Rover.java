@@ -6,14 +6,16 @@ public final class Rover {
     private int x;
     private int y;
     private String direction;
+    char[] commands;
 
-    public Rover(int x, int y, String direction) {
+    public Rover(int x, int y, String direction, char[] commands) {
         this.x = x;
         this.y = y;
         this.direction = direction;
+        this.commands = commands;
     }
 
-    public void takeCommands(char[] commands) {
+    public void takeCommands() {
 
         if (commands.length == 0) {
             throw new IllegalStateException("Unexpected value: commands empty");

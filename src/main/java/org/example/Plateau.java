@@ -15,6 +15,10 @@ public class Plateau {
         validateRovers();
     }
 
+    public void moveRovers(){
+        rovers.forEach(Rover::takeCommands);
+    }
+
     public void validateRovers(){
         for (Rover rover : rovers) {
             if (rover.x() < 0 || rover.x() > x || rover.y() < 0 || rover.y() > y) {
