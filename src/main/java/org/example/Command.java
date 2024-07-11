@@ -13,10 +13,10 @@ public enum Command {
 
     public static Command fromChar(char ch) {
         return switch (ch) {
-            case 'f' -> f;
-            case 'b' -> b;
-            case 'r' -> r;
-            case 'l' -> l;
+            case 'f', 'F', 'M' -> f;
+            case 'b', 'B' -> b;
+            case 'r', 'R' -> r;
+            case 'l', 'L' -> l;
             default -> null;
         };
     }
